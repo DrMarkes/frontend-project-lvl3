@@ -11,8 +11,22 @@
       <section class="container-fluid bg-dark p-5">
         <div class="row">
           <div class="col-md-10 col-lg-8 mx-auto text-white">
-            <h1 class="display-3">RSS агрегатор</h1>
+            <h1 class="display-3 mb-0">RSS агрегатор</h1>
             <p class="lead">Начните читать RSS сегодня! Это легко и красиво!</p>
+            <form action="" class="rss-form text-body">
+              <div class="row gy-3">
+                <div class="col">
+                  <div class="form-floating">
+                    <input id="url-input" autofocus required name="url" class="form-control w-100" placeholder="ссылка RSS" aria-label="url">
+                    <label for="url-input">Ссылка RSS</label>
+                  </div>
+                </div>
+                <div class="col-sm-auto d-flex justify-content-center">
+                  <button type="submit" aria-label="add" class="btn-lg btn btn-primary px-sm-5 h-100 align-self-center">Добавить</button>
+                </div>
+              </div>
+            </form>
+            <p class="mt-2 mb-0 text-muted">Пример: https://ru.hexlet.io/lessons.rss</p>
           </div>
         </div>
       </section>
