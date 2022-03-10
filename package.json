@@ -1,0 +1,39 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "rss агрегатор",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "simple-git-hooks": {
+    "pre-push": [
+      "make lint"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-drmarkes:DrMarkes/frontend-project-lvl3.git"
+  },
+  "author": "DrMarkes",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "html-webpack-plugin": "^5.5.0",
+    "postcss": "^8.4.8",
+    "postcss-loader": "^6.2.1",
+    "sass-loader": "^12.6.0",
+    "simple-git-hooks": "^2.7.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.2",
+    "bootstrap": "^5.1.3"
+  }
+}
