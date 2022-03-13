@@ -7,5 +7,14 @@ export default {
     feedback: {
       success: 'RSS успешно загружен',
     },
+    feeds: {
+      title: 'Фиды',
+    },
+    posts: {
+      title: 'Посты',
+    },
+    btn: {
+      look: 'Просмотр',
+    },
   },
 };
