@@ -1,6 +1,6 @@
 import axios from 'axios';
 import onChange from 'on-change';
-import { uniqueId } from 'lodash';
+import { uniqueId, includes } from 'lodash';
 import * as yup from 'yup';
 import render from './render.js';
 
@@ -23,7 +23,66 @@ const validate = (url, state) => {
 };
 
 const path = {
-  get: (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`,
+  get: (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`,
+};
+
+const setPostsId = (posts, feedId) => posts
+  .map((post) => {
+    post.feedId = feedId;
+    post.id = uniqueId();
+    return post;
+  });
+
+const parseData = (data, url) => {
+  try {
+    const parser = new DOMParser();
+    const content = parser.parseFromString(data.contents, 'application/xml');
+
+    const postElements = content.querySelectorAll('channel>item');
+    const posts = [...postElements].map((item) => {
+      const post = {
+        title: item.querySelector('title').textContent,
+        description: item.querySelector('description').textContent,
+        link: item.querySelector('link').textContent,
+      };
+      return post;
+    });
+
+    const feed = {
+      head: {
+        title: content.querySelector('channel>title').textContent,
+        description: content.querySelector('channel>description').textContent,
+        url,
+      },
+      posts,
+    };
+    return feed;
+  } catch (e) {
+    throw new Error(i18next.t('error.parse'));
+  }
+};
+
+const reloadData = (state, feedId) => {
+  setTimeout(() => {
+    const { url } = state.feeds.find(({ id }) => id === feedId);
+    const response = axios.get(path.get(url));
+    response.then(({ data }) => {
+      const loadedPostLinks = state.posts
+        .filter((post) => post.feedId === feedId)
+        .map((post) => post.link);
+
+      const feed = parseData(data, url);
+      const newPosts = feed.posts
+        .filter((post) => !includes(loadedPostLinks, post.link));
+      const postsToAdd = setPostsId(newPosts, feedId);
+
+      console.log(postsToAdd);
+      state.posts = [...postsToAdd, ...state.posts];
+      console.log();
+    })
+      .catch()
+      .then(() => reloadData(state, feedId));
+  }, 5000);
 };
 
 export default (i18nextInstance) => {
@@ -35,30 +94,6 @@ export default (i18nextInstance) => {
     feedback: document.querySelector('.feedback'),
     feeds: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
-  };
-
-  const exampleUrl = 'http://lorem-rss.herokuapp.com/feed?unit=second&interval=30';
-
-  const parseRSS = (rss) => {
-    const id = uniqueId();
-    const channel = {
-      id,
-      title: rss.querySelector('channel>title').textContent,
-      description: rss.querySelector('channel>description').textContent,
-    };
-
-    const postElements = rss.querySelectorAll('channel>item');
-    const posts = [...postElements].map((item) => {
-      const post = {
-        id: uniqueId(),
-        feedId: id,
-        title: item.querySelector('title').textContent,
-        description: item.querySelector('description').textContent,
-        link: item.querySelector('link').textContent,
-      };
-      return post;
-    });
-    return { channel, posts };
   };
 
   const state = onChange(
@@ -86,19 +121,26 @@ export default (i18nextInstance) => {
         return axios.get(path.get(url));
       })
       .then(({ data }) => {
-        const parser = new DOMParser();
-        const rss = parser.parseFromString(data.contents, 'application/xml');
-        const feed = parseRSS(rss);
-        state.feeds.push(feed.channel);
-        state.posts = feed.posts;
-        state.loadedUrls.push(state.url);
-        state.url = null;
+        const feed = parseData(data, state.url);
+        feed.head.id = uniqueId();
+        state.feeds = [feed.head, ...state.feeds];
+        state.posts = [...setPostsId(feed.posts, feed.head.id), ...state.posts];
+        state.loadedUrls.push(feed.head.url);
         state.processState = 'received';
+        state.processState = 'filling';
+        return feed.head.id;
+      })
+      .then((id) => {
+        reloadData(state, id);
       })
       .catch((e) => {
-        console.log(e);
+        if (e instanceof yup.ValidationError) {
+          state.valid = false;
+        }
+        if (e.message === 'Network Error') {
+          e.message = i18next.t('error.network');
+        }
         state.errors = e;
-        state.valid = false;
       });
   });
 };

@@ -6,9 +6,12 @@ const handleProcessState = (elements, processState) => {
       elements.feedback.classList.remove('text-danger');
       elements.feedback.classList.add('text-success');
       elements.feedback.textContent = i18next.t('feedback.success');
+      break;
+    case 'filling': {
       elements.form.reset();
       elements.form.focus();
       break;
+    }
     default:
       break;
   }
@@ -33,6 +36,7 @@ const createContainer = (name) => {
 
 const renderFeeds = (elements, feeds) => {
   const container = createContainer('feeds');
+  elements.feeds.innerHTML = '';
   elements.feeds.append(container);
   const ulEl = document.createElement('ul');
   ulEl.classList.add('list-group', 'border-0', 'rounded-0');
@@ -55,12 +59,12 @@ const renderFeeds = (elements, feeds) => {
 
 const renderPosts = (elements, posts) => {
   const container = createContainer('posts');
+  elements.posts.innerHTML = '';
   elements.posts.append(container);
 
   const ulEl = document.createElement('ul');
   ulEl.classList.add('list-group', 'border-0', 'rounded-0');
   container.append(ulEl);
-  console.log(posts);
 
   const liElements = posts.map((item) => {
     const liEl = document.createElement('li');
