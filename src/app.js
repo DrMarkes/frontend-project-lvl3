@@ -27,7 +27,12 @@ const validate = (url, state) => {
 };
 
 const path = {
-  get: (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`,
+  get: (url) => {
+    const requestUrl = new URL('../get', 'https://allorigins.hexlet.app/');
+    requestUrl.searchParams.set('disableCache', true);
+    requestUrl.searchParams.set('url', url);
+    return requestUrl.toString();
+  },
 };
 
 const setPostsId = (posts, feedId) => posts
