@@ -3,8 +3,8 @@ let i18next;
 const handleProcessState = (elements, processState) => {
   switch (processState) {
     case 'loading': {
-      elements.inputRSS.setAttribute('readonly', true);
-      elements.btnAdd.setAttribute('disabled', true);
+      elements.inputRSS.setAttribute('readonly');
+      elements.btnAdd.setAttribute('disabled');
       break;
     }
     case 'received': {
