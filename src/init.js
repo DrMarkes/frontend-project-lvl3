@@ -5,10 +5,10 @@ import app from './app.js';
 
 export default () => {
   const i18nextInstance = i18next.createInstance();
-  const lang = window.navigator.userLanguage || window.navigator.language;
+  const lng = 'ru';
   i18nextInstance
     .init({
-      lng: lang,
+      lng,
       debug: false,
       resources: {
         ru,
