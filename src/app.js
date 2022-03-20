@@ -31,7 +31,7 @@ const path = {
     const requestUrl = new URL('../get', 'https://allorigins.hexlet.app/');
     requestUrl.searchParams.set('disableCache', true);
     requestUrl.searchParams.set('url', url);
-    return requestUrl.toString();
+    return requestUrl;
   },
 };
 
