@@ -129,15 +129,15 @@ export default (i18nextInstance) => {
     const formData = new FormData(e.target);
     const url = formData.get('url');
     validate(url, state)
-      .then((url) => {
+      .then((validUrl) => {
         state.processState = 'loading';
         state.valid = true;
         state.errors = {};
-        state.url = url;
+        state.url = validUrl;
         const req = axios.get('https://allorigins.hexlet.app/get', {
           params: {
             disableCache: true,
-            url: encodeURI(url),
+            url: encodeURI(validUrl),
           },
         });
         return req;
@@ -155,15 +155,15 @@ export default (i18nextInstance) => {
       .then((id) => {
         reloadData(state, id);
       })
-      .catch((e) => {
-        if (e instanceof yup.ValidationError) {
+      .catch((error) => {
+        if (error instanceof yup.ValidationError) {
           state.valid = false;
         }
-        if (e.message === 'Network Error') {
-          e.message = i18next.t('error.network');
+        if (error.message === 'Network Error') {
+          error.message = i18next.t('error.network');
         }
         state.processState = 'filling';
-        state.errors = e;
+        state.errors = error;
       });
   });
 };

@@ -103,8 +103,8 @@ const renderPosts = (state, elements, posts) => {
     btn.setAttribute('data-bs-target', '#modal');
     btn.addEventListener('click', (e) => {
       const { id } = e.target.dataset;
-      const post = posts.find((post) => post.id === id);
-      state.ui.modal = { ...post };
+      const currentPost = posts.find((postItem) => postItem.id === id);
+      state.ui.modal = { ...currentPost };
       state.ui.visitedLinks.push(id);
     });
     liEl.append(linkEl, btn);
