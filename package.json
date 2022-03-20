@@ -2,10 +2,10 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "rss агрегатор",
-  "main": "src/index.js",
+  "main": "src/init.js",
   "type": "module",
   "scripts": {
-    "test": "npx jest --bail"
+    "test": "npx -- jest --bail"
   },
   "simple-git-hooks": {
     "pre-commit": "make lint"
