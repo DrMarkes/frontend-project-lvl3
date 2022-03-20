@@ -14,7 +14,7 @@ const handleProcessState = (elements, processState) => {
       break;
     }
     case 'filling': {
-      elements.inputRSS.removeAttribute('readonly', false);
+      elements.inputRSS.removeAttribute('readonly');
       elements.btnAdd.removeAttribute('disabled');
       elements.inputRSS.value = '';
       elements.form.focus();
