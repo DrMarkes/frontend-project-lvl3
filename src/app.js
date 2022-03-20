@@ -31,6 +31,7 @@ const path = {
     const requestUrl = new URL('../get', 'https://allorigins.hexlet.app/');
     requestUrl.searchParams.set('disableCache', true);
     requestUrl.searchParams.set('url', url);
+    console.log(requestUrl.searchParams.get('url'));
     return requestUrl;
   },
 };
@@ -74,7 +75,12 @@ const parseData = (data, url) => {
 const reloadData = (state, feedId) => {
   setTimeout(() => {
     const { url } = state.feeds.find(({ id }) => id === feedId);
-    const response = axios.get(path.get(url));
+    const response = axios.get('https://allorigins.hexlet.app/get', {
+      params: {
+        disableCache: true,
+        url,
+      },
+    });
     response.then(({ data }) => {
       const loadedPostLinks = state.posts
         .filter((post) => post.feedId === feedId)
@@ -136,7 +142,12 @@ export default (i18nextInstance) => {
         state.valid = true;
         state.errors = {};
         state.url = url;
-        return axios.get(path.get(url));
+        return axios.get('https://allorigins.hexlet.app/get', {
+          params: {
+            disableCache: true,
+            url,
+          },
+        });
       })
       .then(({ data }) => {
         const feed = parseData(data, state.url);
