@@ -8,7 +8,7 @@ const handleProcessState = (elements, processState) => {
       elements.feedback.textContent = i18next.t('feedback.success');
       break;
     case 'filling': {
-      elements.form.reset();
+      elements.inputRSS.value = '';
       elements.form.focus();
       break;
     }

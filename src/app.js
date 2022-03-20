@@ -26,16 +26,6 @@ const validate = (url, state) => {
   return schema.validate(url);
 };
 
-const path = {
-  get: (url) => {
-    const requestUrl = new URL('../get', 'https://allorigins.hexlet.app/');
-    requestUrl.searchParams.set('disableCache', true);
-    requestUrl.searchParams.set('url', url);
-    console.log(requestUrl.searchParams.get('url'));
-    return requestUrl;
-  },
-};
-
 const setPostsId = (posts, feedId) => posts
   .map((post) => {
     post.feedId = feedId;
@@ -78,7 +68,7 @@ const reloadData = (state, feedId) => {
     const response = axios.get('https://allorigins.hexlet.app/get', {
       params: {
         disableCache: true,
-        url,
+        url: encodeURI(url),
       },
     });
     response.then(({ data }) => {
@@ -119,7 +109,7 @@ export default (i18nextInstance) => {
   const state = onChange(
     {
       valid: true,
-      processState: 'filling',
+      processState: '',
       url: null,
       loadedUrls: [],
       feeds: [],
@@ -142,12 +132,13 @@ export default (i18nextInstance) => {
         state.valid = true;
         state.errors = {};
         state.url = url;
-        return axios.get('https://allorigins.hexlet.app/get', {
+        const req = axios.get('https://allorigins.hexlet.app/get', {
           params: {
             disableCache: true,
-            url,
+            url: encodeURI(url),
           },
         });
+        return req;
       })
       .then(({ data }) => {
         const feed = parseData(data, state.url);
