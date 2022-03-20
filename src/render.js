@@ -2,12 +2,20 @@ let i18next;
 
 const handleProcessState = (elements, processState) => {
   switch (processState) {
-    case 'received':
+    case 'loading': {
+      elements.inputRSS.setAttribute('readonly', true);
+      elements.btnAdd.setAttribute('disabled', true);
+      break;
+    }
+    case 'received': {
       elements.feedback.classList.remove('text-danger');
       elements.feedback.classList.add('text-success');
       elements.feedback.textContent = i18next.t('feedback.success');
       break;
+    }
     case 'filling': {
+      elements.inputRSS.removeAttribute('readonly', false);
+      elements.btnAdd.removeAttribute('disabled');
       elements.inputRSS.value = '';
       elements.form.focus();
       break;

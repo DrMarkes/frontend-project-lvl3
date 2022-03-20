@@ -95,6 +95,7 @@ export default (i18nextInstance) => {
   initYup();
   const elements = {
     form: document.querySelector('.rss-form'),
+    btnAdd: document.querySelector('button[aria-label="add"]'),
     inputRSS: document.querySelector('#url-input'),
     feedback: document.querySelector('.feedback'),
     feeds: document.querySelector('.feeds'),
@@ -129,6 +130,7 @@ export default (i18nextInstance) => {
     const url = formData.get('url');
     validate(url, state)
       .then((url) => {
+        state.processState = 'loading';
         state.valid = true;
         state.errors = {};
         state.url = url;
