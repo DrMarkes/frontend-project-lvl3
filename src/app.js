@@ -162,6 +162,7 @@ export default (i18nextInstance) => {
         if (e.message === 'Network Error') {
           e.message = i18next.t('error.network');
         }
+        state.processState = 'filling';
         state.errors = e;
       });
   });
