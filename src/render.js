@@ -3,8 +3,8 @@ let i18next;
 const handleProcessState = (elements, processState) => {
   switch (processState) {
     case 'loading': {
-      elements.inputRSS.setAttribute('readonly');
-      elements.btnAdd.setAttribute('disabled');
+      elements.inputRSS.setAttribute('readonly', '');
+      elements.btnAdd.setAttribute('disabled', '');
       break;
     }
     case 'received': {
@@ -87,7 +87,7 @@ const renderPosts = (state, elements, posts) => {
 
   const liElements = posts.map((post) => {
     const liEl = document.createElement('li');
-    liEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    liEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-2');
     const linkEl = document.createElement('a');
     linkEl.setAttribute('href', post.link);
     linkEl.setAttribute('data-id', post.id);
