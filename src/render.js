@@ -57,7 +57,18 @@ const renderFeeds = (elements, feeds) => {
   ulEl.append(...liElements);
 };
 
-const renderPosts = (elements, posts) => {
+const renderLinks = (elements, value) => {
+  const links = elements.posts.querySelectorAll('a[data-id]');
+  links.forEach((link) => link.classList.add('fw-bold'));
+  const visitedLinks = value.map((id) => elements
+    .posts.querySelector(`a[data-id="${id}"]`));
+  visitedLinks.forEach((link) => {
+    link.classList.remove('fw-bold');
+    link.classList.add('fw-normal', 'link-secondary');
+  });
+};
+
+const renderPosts = (state, elements, posts) => {
   const container = createContainer('posts');
   elements.posts.innerHTML = '';
   elements.posts.append(container);
@@ -66,31 +77,44 @@ const renderPosts = (elements, posts) => {
   ulEl.classList.add('list-group', 'border-0', 'rounded-0');
   container.append(ulEl);
 
-  const liElements = posts.map((item) => {
+  const liElements = posts.map((post) => {
     const liEl = document.createElement('li');
     liEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const linkEl = document.createElement('a');
-    linkEl.classList.add('fw-bold');
-    linkEl.setAttribute('href', item.link);
-    linkEl.setAttribute('data-id', item.id);
+    linkEl.setAttribute('href', post.link);
+    linkEl.setAttribute('data-id', post.id);
     linkEl.setAttribute('target', '_blank');
     linkEl.setAttribute('rel', 'noopener noreferrer');
-    linkEl.textContent = item.title;
+    linkEl.textContent = post.title;
     const btn = document.createElement('button');
     btn.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     btn.textContent = i18next.t('btn.look');
     btn.setAttribute('type', 'button');
-    btn.setAttribute('data-id', item.id);
+    btn.setAttribute('data-id', post.id);
     btn.setAttribute('data-bs-toggle', 'modal');
     btn.setAttribute('data-bs-target', '#modal');
+    btn.addEventListener('click', (e) => {
+      const { id } = e.target.dataset;
+      const post = posts.find((post) => post.id === id);
+      state.ui.modal = { ...post };
+      state.ui.visitedLinks.push(id);
+    });
     liEl.append(linkEl, btn);
     return liEl;
   });
 
   ulEl.append(...liElements);
+
+  renderLinks(elements, state.ui.visitedLinks);
 };
 
-export default (elements, i18nextInstance) => (path, value) => {
+const renderModal = (elements, value) => {
+  elements.modal.title.textContent = value.title;
+  elements.modal.body.textContent = value.description;
+  elements.modal.link.setAttribute('href', value.link);
+};
+
+export default (elements, i18nextInstance) => function render(path, value) {
   i18next = i18nextInstance;
   switch (path) {
     case 'valid': {
@@ -108,7 +132,13 @@ export default (elements, i18nextInstance) => (path, value) => {
       renderFeeds(elements, value);
       break;
     case 'posts':
-      renderPosts(elements, value);
+      renderPosts(this, elements, value);
+      break;
+    case 'ui.modal':
+      renderModal(elements, value);
+      break;
+    case 'ui.visitedLinks':
+      renderLinks(elements, value);
       break;
     default:
       break;

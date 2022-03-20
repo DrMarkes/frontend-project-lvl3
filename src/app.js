@@ -74,11 +74,11 @@ const reloadData = (state, feedId) => {
       const feed = parseData(data, url);
       const newPosts = feed.posts
         .filter((post) => !includes(loadedPostLinks, post.link));
+      if (newPosts.length === 0) {
+        return;
+      }
       const postsToAdd = setPostsId(newPosts, feedId);
-
-      console.log(postsToAdd);
       state.posts = [...postsToAdd, ...state.posts];
-      console.log();
     })
       .catch()
       .then(() => reloadData(state, feedId));
@@ -94,6 +94,11 @@ export default (i18nextInstance) => {
     feedback: document.querySelector('.feedback'),
     feeds: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
+    modal: {
+      title: document.querySelector('#modal .modal-title'),
+      body: document.querySelector('#modal .modal-body'),
+      link: document.querySelector('#modal .full-article'),
+    },
   };
 
   const state = onChange(
@@ -105,6 +110,10 @@ export default (i18nextInstance) => {
       feeds: [],
       posts: [],
       errors: {},
+      ui: {
+        modal: {},
+        visitedLinks: [],
+      },
     },
     render(elements, i18nextInstance),
   );
