@@ -3,6 +3,7 @@ export default {
     error: {
       valid: 'Ссылка должна быть валидным URL',
       exist: 'RSS уже существует',
+      required: 'Не должно быть пустым',
       parse: 'Ресурс не содержит валидный RSS',
       network: 'Ошибка сети',
     },

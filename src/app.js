@@ -13,12 +13,16 @@ const initYup = () => {
     },
     string: {
       url: i18next.t('error.valid'),
+      required: i18next.t('error.required'),
     },
   });
 };
 
 const validate = (url, state) => {
-  const schema = yup.string().url().notOneOf(state.loadedUrls);
+  const schema = yup
+    .string().url()
+    .required()
+    .notOneOf(state.loadedUrls);
   return schema.validate(url);
 };
 
