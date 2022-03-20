@@ -1,6 +1,6 @@
 import axios from 'axios';
 import onChange from 'on-change';
-import { uniqueId, includes } from 'lodash';
+import _ from 'lodash';
 import * as yup from 'yup';
 import render from './render.js';
 
@@ -33,7 +33,7 @@ const path = {
 const setPostsId = (posts, feedId) => posts
   .map((post) => {
     post.feedId = feedId;
-    post.id = uniqueId();
+    post.id = _.uniqueId();
     return post;
   });
 
@@ -77,7 +77,7 @@ const reloadData = (state, feedId) => {
 
       const feed = parseData(data, url);
       const newPosts = feed.posts
-        .filter((post) => !includes(loadedPostLinks, post.link));
+        .filter((post) => !_.includes(loadedPostLinks, post.link));
       if (newPosts.length === 0) {
         return;
       }
@@ -135,7 +135,7 @@ export default (i18nextInstance) => {
       })
       .then(({ data }) => {
         const feed = parseData(data, state.url);
-        feed.head.id = uniqueId();
+        feed.head.id = _.uniqueId();
         state.feeds = [feed.head, ...state.feeds];
         state.posts = [...setPostsId(feed.posts, feed.head.id), ...state.posts];
         state.loadedUrls.push(feed.head.url);
